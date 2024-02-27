@@ -1,5 +1,4 @@
-![TN_new](https://github.com/Golnaz-spa/Transformer-Network-for-Time-Series-Forecasting/assets/93345507/9a86414f-f945-4669-a32f-e36d947664e6)
-
+<img src="TN_new.jpg" width=30% height=30%>
 
 Fig. 1. Implementation of Transformer Network Model by applying CNN-LSTM layer as feed forward layer
 
@@ -62,4 +61,29 @@ The main components of the model are defined within `TransformerEncoder` class, 
 The model is designed to be flexible and can be adapted for various types of time series data. You can customize the encoder layers, attention mechanisms, and feed-forward network according to your dataset and forecasting goals.
 ## Contributing
 Contributions to improve the model or extend its functionality are welcome. Please feel free to submit pull requests or open issues to discuss potential enhancements.
+
+## Results
+The performance of the Transformer Network using Hybrid layer (CNN-LSTM) as feed forward layer is evaluated using Mean Squared Error (MSE), Mean Absolute Error (MAE), and Mean Absolute Percentage Error (MAPE). The results are as follows:
+- Transformer Network (applying CNN-LSTM layer as feed forward layer in encoder block):
+  - MSE: 1.0801e-05
+  - MAE: 0.0021
+  - MAPE: 26.9638
+
+
+Fig 2 illustrates the forecasting result of volatility of S&P 500 using the LSTM approach. The figure presents a visual comparison of the actual volatility value with the corresponding forecasted values. This plot aims to offer a thorough evaluation of the model’s ability to capture the true fluctuations in volatility over time. The blue line represents actual volatility, while the green line represents predicted volatility. This visualization demonstrates the effectiveness of the model in capturing the inherent fluctuations and patterns within the domain of volatility forecasting.
+
+<img src="Forecasting volatility.png" width=70% height=70%>
+
+Fig 2. Forecasting result of volatility of S&P 500 
+
+Fig 3 displays a plot depicting MSE loss over 50 epochs. A smooth and steadily declining MSE loss curve serves as an indicator of a training process characterized by effective parameter optimization, resulting in minimized forecasting errors.
+
+<img src="MSE.png" width=70% height=70%>
+
+Fig 3. Model loss (MSE) by applying TN (LSTM as FFN layer))
+
+
+
+
+
 
