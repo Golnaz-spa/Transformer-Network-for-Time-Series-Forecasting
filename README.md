@@ -1,4 +1,5 @@
 ![TN_new](https://github.com/Golnaz-spa/Transformer-Network-for-Time-Series-Forecasting/assets/93345507/9a86414f-f945-4669-a32f-e36d947664e6)
+Fig. 1. Implementation of TN Model by applying CNN-LSTM layer as feed forward layer
 
 # Transformer Network for Time Series Forecasting
 This repository contains the implementation of a Transformer Network designed for time series forecasting, with a particular focus on financial market data. Our model incorporates innovative techniques Time2Vec for positional encoding and a combination of attention mechanisms, Convolutional Neural Networks (CNNs), and Long Short-Term Memory (LSTM) networks as feed forward layer within the Transformer encoder layers. This approach aims to capture both spatial and temporal dependencies in the data for accurate forecasting.
