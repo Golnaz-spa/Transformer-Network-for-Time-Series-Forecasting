@@ -1,6 +1,5 @@
 #install yfinance
 !pip install yfinance
-
 #install yahoofinancials
 !pip install yahoofinancials
 
@@ -218,14 +217,15 @@ max_adj = df[(df.index < last_20pct)]['Adj Close'].max(axis=0)
 df['Adj Close'] = (df['Adj Close'] - min_adj) / (max_adj - min_adj)
 
 #Split data to training, validation and test sets
+
 df_train = df[(df.index < last_20pct)]  # Training data are 80% of total data
 df_val = df[(df.index >= last_20pct) & (df.index < last_10pct)]
 df_test = df[(df.index >= last_10pct)]
 
-# Remove date column
-df_train.drop(columns=['Date'], inplace=True)
-df_val.drop(columns=['Date'], inplace=True)
-df_test.drop(columns=['Date'], inplace=True)
+# Remove columns
+df_train.drop(columns=['Date', 'High','Low','Open', 'Close', 'Adj Close', 'Volume'], inplace=True)
+df_val.drop(columns=['Date', 'High','Low','Open', 'Close', 'Adj Close', 'Volume'], inplace=True)
+df_test.drop(columns=['Date', 'High','Low','Open', 'Close', 'Adj Close', 'Volume'], inplace=True)
 
 # Convert pandas columns into arrays
 train_data = df_train.values
@@ -257,21 +257,21 @@ ax1.legend(loc="best", fontsize=12)
 X_train, y_train = [], []
 for i in range(seq_len, len(train_data)):
   X_train.append(train_data[i-seq_len:i])
-  y_train.append(train_data[:, 6][i])
+  y_train.append(train_data[:, 0][i])
 X_train, y_train = np.array(X_train), np.array(y_train)
 
 #preparing time series data for validation set: sequences and targets
 X_val, y_val = [], []
 for i in range(seq_len, len(val_data)):
     X_val.append(val_data[i-seq_len:i])
-    y_val.append(val_data[:, 6][i])
+    y_val.append(val_data[:, 0][i])
 X_val, y_val = np.array(X_val), np.array(y_val)
 
 #preparing time series data for test set: sequences and targets
 X_test, y_test = [], []
 for i in range(seq_len, len(test_data)):
     X_test.append(test_data[i-seq_len:i])
-    y_test.append(test_data[:, 6][i])
+    y_test.append(test_data[:, 0][i])
 X_test, y_test = np.array(X_test), np.array(y_test)
 
 print('Training set shape', X_train.shape, y_train.shape)
@@ -285,7 +285,7 @@ Time2Vec's unique ability to capture both periodic and non-periodic patterns enr
 leveraging historical data insights.
 """
 
-#Positional Encoding: implementing Time2Vector: enhancing time series models with periodic and non-periodic features
+#implementing Time2Vector: enhancing time series models with periodic and non-periodic features
 class Time2Vector(Layer):
   def __init__(self, seq_len, **kwargs):
     super(Time2Vector, self).__init__()
@@ -315,7 +315,7 @@ class Time2Vector(Layer):
 
   def call(self, x):
     #Calculate periodic and non-periodic time features
-    x = tf.math.reduce_mean(x[:,:,:7], axis=-1)
+    x = tf.math.reduce_mean(x[:,:,:1], axis=-1)
     time_linear = self.weights_linear * x + self.bias_linear # non-periodic time feature
     time_linear = tf.expand_dims(time_linear, axis=-1) # Add dimension (batch, seq_len, 1)
 
@@ -328,7 +328,7 @@ class Time2Vector(Layer):
     config.update({'seq_len': self.seq_len})
     return config
 
-#implementing Single-head Attention and Multi-head Attention
+#implementing Single-head Attention and Multi-head Attention 
 
 #Building a Single-head Attention Layer
 class SingleAttention(Layer):
@@ -389,7 +389,7 @@ class MultiAttention(Layer):
     multi_linear = self.linear(concat_attn)
     return multi_linear
 
-#Transformer Network- Encoder layer: integrating attention and CNN and LSTM layers as feed forward layers
+#Transformer Network encoder layer: integrating attention and CNN and LSTM layers as feed forward layers
 class TransformerEncoder(Layer):
   def __init__(self, d_k, d_v, n_heads, ff_dim, dropout=0.1, **kwargs):
     super(TransformerEncoder, self).__init__()
@@ -460,7 +460,7 @@ def create_model():
   attn_layer3 = TransformerEncoder(d_k, d_v, n_heads, ff_dim)
 
   # Define the input sequence structure
-  in_seq = Input(shape=(seq_len, 7))
+  in_seq = Input(shape=(seq_len, 1))
   # Apply time embedding to the input sequence
   x = time_embedding(in_seq)
   # Concatenate the original input sequence with its time embedding
